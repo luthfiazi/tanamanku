@@ -28,7 +28,7 @@ const NavbarComp = (props) => {
                 <NavLink href="/components/">Home</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="https://github.com/reactstrap/reactstrap">About Us</NavLink>
+                <NavLink href="">About Us</NavLink>
               </NavItem>
             </Nav>
             <NavbarText>Admin</NavbarText>

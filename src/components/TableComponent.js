@@ -1,21 +1,29 @@
 import React from 'react'
 import BootstrapTable from 'react-bootstrap-table-next';
-import { Container, Button } from 'reactstrap';
+import { Container, Button, Row, Col } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faInfo, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faInfo, faEdit, faTrash, faUserPlus } from '@fortawesome/free-solid-svg-icons'
+import paginationFactory from 'react-bootstrap-table2-paginator';
+import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
+import { Link } from 'react-router-dom';
+
+const { SearchBar } = Search;
 
 const columns = [{
     dataField: 'id',
     text: 'ID',
+    sort: 'true',
     headerStyle: () => {
-        return {width : "5%"};
+        return { width: "5%" };
     },
 }, {
     dataField: 'nama',
-    text: 'Nama'
+    text: 'Nama',
+    sort: 'true'
 }, {
     dataField: 'jenis',
-    text: 'Jenis'
+    text: 'Jenis',
+    sort: 'true'
 },
 {
     dataField: "link",
@@ -23,26 +31,66 @@ const columns = [{
     formatter: (rowContent, row) => {
         return (
             <div>
-                <Button color="success" className="mr-2">
-                    <FontAwesomeIcon icon={faInfo} />Detail
+                <Link to={"detail/" + row.id}>
+                    <Button color="success" className="mr-2">
+                        <FontAwesomeIcon icon={faInfo} />Detail
                 </Button>
-                <Button color="success" className="mr-2">
-                    <FontAwesomeIcon icon={faEdit} />Edit
+                </Link>
+                <Link to={"edit/" + row.id}>
+                    <Button color="success" className="mr-2">
+                        <FontAwesomeIcon icon={faEdit} />Edit
                 </Button>
-                <Button color="success" className="mr-2">
-                    <FontAwesomeIcon icon={faTrash} />Delete
+                </Link>
+                <Link to={"delete/" + row.id}>
+                    <Button color="success" className="mr-2">
+                        <FontAwesomeIcon icon={faTrash} />Delete
                 </Button>
+                </Link>
             </div>
         )
     }
 }];
 
+const defaultSorted = [{
+    dataField: 'id',
+    order: 'asc'
+}];
+
 export const TableComponent = (props) => {
     return (
-        <div>
-            <Container>
-                <BootstrapTable keyField='id' data={props.tanamans} columns={columns} />
-            </Container>
-        </div>
+        <Container>
+            <ToolkitProvider
+                bootstrap4
+                keyField='id'
+                data={props.tanamans}
+                columns={columns}
+                defaultSorted={defaultSorted}
+                search
+            >
+                {
+                    props => (
+                        <div>
+                            <Row>
+                                <Col>
+                                    <Link to="/create">
+                                        <Button color="success" className="mr-2">
+                                            <FontAwesomeIcon icon={faUserPlus} />Create User
+                </Button>
+                                    </Link>
+                                </Col>
+                                <Col>
+                                    <div className="float-right">
+                                        <SearchBar {...props.searchProps} placeholder="search ..." />
+                                    </div>
+                                </Col>
+                            </Row>
+                            <BootstrapTable
+                                {...props.baseProps} pagination={paginationFactory()}
+                            />
+                        </div>
+                    )
+                }
+            </ToolkitProvider>
+        </Container>
     )
 }
